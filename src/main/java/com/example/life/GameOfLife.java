@@ -8,15 +8,18 @@ import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
 
 import java.io.*;
+import java.util.Random;
 
-public class GameOfLife extends GridPane implements Serializable {
+public class GameOfLife extends GridPane {
     private int rows;
     private int cols;
     private int squareSize;
     private int totalCells;
 
-    private Cell[][] board;
-    private boolean[][] next;
+    private double speed;
+
+    public Cell[][] board;
+    public boolean[][] next;
 
     private int activeCells;
     private int generation;
@@ -28,7 +31,7 @@ public class GameOfLife extends GridPane implements Serializable {
         this.cols = cols;
         this.squareSize = squareSize;
         this.totalCells = rows * cols;
-
+        this.speed = 0.1;
         this.generation = 0;
 
         setWidth(squareSize*rows);
@@ -42,7 +45,7 @@ public class GameOfLife extends GridPane implements Serializable {
         initializeGrid();
 
         timeline = new Timeline(
-                new KeyFrame(Duration.seconds(0.08), new EventHandler<ActionEvent>() {
+                new KeyFrame(Duration.seconds(speed), new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
                         nextGeneration();
@@ -51,6 +54,15 @@ public class GameOfLife extends GridPane implements Serializable {
                 })
         );
         timeline.setCycleCount(Timeline.INDEFINITE);
+    }
+    public void setSpeed(double speed){
+        this.speed = speed;
+    }
+    public int getRows(){
+        return this.rows;
+    }
+    public int getCols(){
+       return this.cols;
     }
     public void setControls(Controls controls){
         this.controls = controls;
@@ -67,14 +79,32 @@ public class GameOfLife extends GridPane implements Serializable {
     public int getTotalCells(){
         return this.totalCells;
     }
-    public void updateCell(Cell cell){
-        board[cell.row][cell.col].setAlive(true);
-        next[cell.row][cell.col] = true;
+    public void randomizeBoard(double randomValue){
+        Random random = new Random();
+        for (int row = 0; row < this.rows; row++){
+            for (int col = 0; col < this.cols; col++){
+                boolean isAlive = random.nextDouble() < randomValue;
+                updateCell(board[row][col], isAlive);
+            }
+        }
+    }
+    public void updateCell(Cell cell, boolean alive){
+        board[cell.row][cell.col].setAlive(alive);
+        next[cell.row][cell.col] = alive;
+    }
+    public void clearBoard(){
+        for (int row = 0; row < this.rows; row++){
+            for (int col = 0; col < this.cols; col++){
+                board[row][col].setAlive(false);
+                next[row][col] = false;
+            }
+        }
+        generation = 0;
     }
     private void initializeGrid(){
         for (int row = 0; row < this.rows; row++){
             for (int col = 0; col < this.cols; col++){
-                Cell cell = new Cell(squareSize, row, col, 0.25, this);
+                Cell cell = new Cell(squareSize, row, col, 0.0, this);
                 this.board[row][col] = cell;
                 this.next[row][col] = cell.isAlive();
                 activeCells += cell.isAlive() ? 1 : 0;
@@ -126,22 +156,5 @@ public class GameOfLife extends GridPane implements Serializable {
         }
         return sum;
     }
-    public void saveGame(String filename){
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
-            oos.writeObject(this);
-            System.out.println("Game saved successfully!");
-        } catch (IOException e){
-            System.err.println("Error saving game: " + e.getMessage());
-        }
-    }
-    public static GameOfLife loadGame(String filename){
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))) {
-            GameOfLife game = (GameOfLife) ois.readObject();
-            System.out.println("Game loaded successfully!");
-            return game;
-        } catch (IOException | ClassNotFoundException e){
-            System.err.println("Error loading game: " + e.getMessage());
-            return null;
-        }
-    }
+
 }

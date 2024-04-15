@@ -31,7 +31,7 @@ public class Cell extends Rectangle {
         setWidth(size);
         setHeight(size);
         setStroke(Color.BLACK);
-        setStrokeWidth(0.8);
+        setStrokeWidth((double) size /20);
         paint();
         this.age = 0;
 
@@ -39,7 +39,7 @@ public class Cell extends Rectangle {
         setOnMouseDragged(this::handleMouseDragged);
     }
     private void handleMousePressed(MouseEvent mouseEvent) {
-        game.updateCell(this);
+        game.updateCell(this, !this.isAlive);
     }
     private void handleMouseDragged(MouseEvent mouseEvent) {
         setAlive(true);
