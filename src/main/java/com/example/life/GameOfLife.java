@@ -40,7 +40,7 @@ public class GameOfLife extends GridPane {
         initializeGrid();
 
         timeline = new Timeline(
-                new KeyFrame(Duration.seconds(0.1), new EventHandler<ActionEvent>() {
+                new KeyFrame(Duration.seconds(0.08), new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
                         nextGeneration();
