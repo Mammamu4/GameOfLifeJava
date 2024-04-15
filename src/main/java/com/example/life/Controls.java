@@ -23,10 +23,9 @@ public class Controls extends HBox {
         totalCells = createStyledLabel("Total Cells: ");
         activeCells = createStyledLabel("Active Cells: ");
         activeCellsAmount = createStyledLabel("Active Cells Amount: ");
-        totalAge = createStyledLabel("Total Age: ");
         generation = createStyledLabel("Generation: ");
 
-        getChildren().addAll(startButton, stopButton, totalCells, activeCells, activeCellsAmount, generation, totalAge);
+        getChildren().addAll(startButton, stopButton, totalCells, activeCells, activeCellsAmount, generation);
 
         setSpacing(10); // Add spacing between buttons and labels
     }
@@ -41,11 +40,10 @@ public class Controls extends HBox {
         this.game = gameOfLife;
     }
 
-    public void updateStats(int totalCells, int activeCells, double activeCellsAmount, int totalAge, int generation){
+    public void updateStats(int totalCells, int activeCells, double activeCellsAmount, int generation){
         this.totalCells.setText("Total Cells: " + totalCells);
         this.activeCells.setText("Active Cells: " + activeCells);
         this.activeCellsAmount.setText("Active Cells Amount: " + String.format("%.2f%%", activeCellsAmount));
-        this.totalAge.setText("Total Age: " + totalAge);
         this.generation.setText("Generation: " + generation);
     }
 

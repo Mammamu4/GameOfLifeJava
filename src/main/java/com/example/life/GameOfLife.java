@@ -4,27 +4,29 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class GameOfLife extends GridPane {
     private int rows;
     private int cols;
     private int squareSize;
+    private int totalCells;
+
     private Cell[][] board;
     private boolean[][] next;
+
     private int activeCells;
     private int generation;
+
     public Timeline timeline;
     private Controls controls = null;
     public GameOfLife(int rows, int cols, int squareSize){
         this.rows = rows;
         this.cols = cols;
         this.squareSize = squareSize;
+        this.totalCells = rows * cols;
+
         this.generation = 0;
 
         setWidth(squareSize*rows);
@@ -42,8 +44,7 @@ public class GameOfLife extends GridPane {
                     @Override
                     public void handle(ActionEvent event) {
                         nextGeneration();
-                        printStats();
-                        controls.updateStats(getTotalCells(), getActiveCells(), activeCells/(double)(rows*cols) * 100, getTotalAge(), generation);
+                        controls.updateStats(getTotalCells(), getActiveCells(), activeCells/(double)(rows*cols) * 100, generation);
                     }
                 })
         );
@@ -64,16 +65,7 @@ public class GameOfLife extends GridPane {
         return this.activeCells;
     }
     public int getTotalCells(){
-        return rows*cols;
-    }
-    public int getTotalAge(){
-        int sum = 0;
-        for (int row = 0; row < this.rows; row++){
-            for (int col = 0; col < this.cols; col++){
-                sum += board[row][col].getAge();
-            }
-        }
-        return sum;
+        return this.totalCells;
     }
     private void initializeGrid(){
         for (int row = 0; row < this.rows; row++){
@@ -129,12 +121,5 @@ public class GameOfLife extends GridPane {
             sum--;
         }
         return sum;
-    }
-    private void printStats(){
-        System.out.println();
-        System.out.println("Total Cells: " + rows*cols);
-        System.out.println("Alive Cells: " + activeCells);
-        System.out.printf("Alive amount: %.3f%%\n", activeCells/(double)(rows*cols) * 100);
-        System.out.println();
     }
 }
