@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
-        GameOfLife gameOfLife = new GameOfLife(100, 100, 5);
+        GameOfLife gameOfLife = new GameOfLife(25, 25, 20);
         Controls controls = new Controls();
         gameOfLife.setControls(controls);
         controls.setGame(gameOfLife);

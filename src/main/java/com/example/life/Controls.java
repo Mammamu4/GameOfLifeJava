@@ -1,11 +1,13 @@
 package com.example.life;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 
 public class Controls extends HBox {
     private Button startButton;
     private Button stopButton;
+
     private Label totalCells;
     private Label activeCells;
     private Label activeCellsAmount;

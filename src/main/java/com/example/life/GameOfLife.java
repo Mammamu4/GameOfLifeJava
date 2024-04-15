@@ -7,7 +7,9 @@ import javafx.event.EventHandler;
 import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
 
-public class GameOfLife extends GridPane {
+import java.io.*;
+
+public class GameOfLife extends GridPane implements Serializable {
     private int rows;
     private int cols;
     private int squareSize;
@@ -49,8 +51,6 @@ public class GameOfLife extends GridPane {
                 })
         );
         timeline.setCycleCount(Timeline.INDEFINITE);
-
-
     }
     public void setControls(Controls controls){
         this.controls = controls;
@@ -67,10 +67,14 @@ public class GameOfLife extends GridPane {
     public int getTotalCells(){
         return this.totalCells;
     }
+    public void updateCell(Cell cell){
+        board[cell.row][cell.col].setAlive(true);
+        next[cell.row][cell.col] = true;
+    }
     private void initializeGrid(){
         for (int row = 0; row < this.rows; row++){
             for (int col = 0; col < this.cols; col++){
-                Cell cell = new Cell(squareSize);
+                Cell cell = new Cell(squareSize, row, col, 0.25, this);
                 this.board[row][col] = cell;
                 this.next[row][col] = cell.isAlive();
                 activeCells += cell.isAlive() ? 1 : 0;
@@ -121,5 +125,23 @@ public class GameOfLife extends GridPane {
             sum--;
         }
         return sum;
+    }
+    public void saveGame(String filename){
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
+            oos.writeObject(this);
+            System.out.println("Game saved successfully!");
+        } catch (IOException e){
+            System.err.println("Error saving game: " + e.getMessage());
+        }
+    }
+    public static GameOfLife loadGame(String filename){
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))) {
+            GameOfLife game = (GameOfLife) ois.readObject();
+            System.out.println("Game loaded successfully!");
+            return game;
+        } catch (IOException | ClassNotFoundException e){
+            System.err.println("Error loading game: " + e.getMessage());
+            return null;
+        }
     }
 }
