@@ -16,7 +16,8 @@ public class SaveManager{
         if (files != null) {
             for (File file : files) {
                 if (file.isFile()) {
-                    fileList.add(file.getName());
+                    String fileName = file.getName().replace(".txt", "");
+                    fileList.add(fileName);
                 }
             }
         }

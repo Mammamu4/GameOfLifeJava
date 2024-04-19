@@ -31,7 +31,7 @@ public class GameOfLife extends GridPane {
         this.cols = cols;
         this.squareSize = squareSize;
         this.totalCells = rows * cols;
-        this.speed = 0.1;
+        this.speed = 0.05;
         this.generation = 0;
 
         setWidth(squareSize*rows);
